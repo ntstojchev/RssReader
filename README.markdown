@@ -1,12 +1,12 @@
 ##RssReader
-RssReader е приложение, разработващо се на Python с помощта на PyQt, целящо да предостави на потребителите лесен и удобен начин за четене на rss feed-ове.
+RssReader is an application, developed in Python with the help of PyQt, aiming to provide the user with an easy and comfortable way of reading rss feeds.
 
-##Функционалност:
-Приложението ще може да:
-- съхранява, импортва, експортва адреси на rss feed-ове, по желание на потребителя
-- изобразява всеки feed в текстов или в html формат
-- експортва даден feed в текстов или в html формат, по желание на потребителя
+##Functionality:
+The application will be able to:
+- save, import, export addresses of the rss feeds
+- visualize every feed in text or html format
+- export a selected feed in text or html format
 
-##Изисквания:
+##System requirements:
 - Python 3.2.2
 - PyQt 4.9.1

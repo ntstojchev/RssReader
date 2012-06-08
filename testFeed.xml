@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<rss version="2.0">
+ <channel>
+    <title>TestFeed</title>
+    <link>www.test.com</link>
+    <description>Test feed</description>
+    <pubDate>Sun, 20 May 2012 15:00:00 +0300</pubDate>
+    <language>bg</language>
+    <item>
+        <title>TestFeedItem1</title>
+        <author>TestFeedItem1Author</author>
+        <link>www.test.com/TestFeedItem1</link>
+        <description>TestFeedItem1Description</description>
+        <pubDate>Sun, 20 May 2012 15:30:00 +0300</pubDate>
+        <enclosure url="www.test.com/TestFeedItem1/enclosure" />
+    </item>
+    <item>
+        <title>TestFeedItem2</title>
+        <author>TestFeedItem2Author</author>
+        <link>www.test.com/TestFeedItem2</link>
+        <description>TestFeedItem2Description</description>
+        <pubDate>Sun, 20 May 2012 16:30:00 +0300</pubDate>
+        <enclosure url="www.test.com/TestFeedItem2/enclosure" />
+    </item>
+ </channel>
+</rss>
