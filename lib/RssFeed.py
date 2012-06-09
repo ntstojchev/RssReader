@@ -1,5 +1,5 @@
 import xml.etree.ElementTree as etree
-from lib.FeedItems import *
+from Lib.FeedItems import *
 
 class RssFeed:
     '''RssFeed.py demonstraion:

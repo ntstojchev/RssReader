@@ -1,4 +1,4 @@
-from lib.FeedItem import *
+from Lib.FeedItem import *
 
 class FeedItems:
     def __init__(self, feed_items):
