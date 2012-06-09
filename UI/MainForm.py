@@ -18,6 +18,7 @@ class MainForm(QDialog):
         self.ui.btnView.clicked.connect(self._btn_view_feed_clicked)
         self.ui.btnImport.clicked.connect(self._btn_import_clicked)
         self.ui.btnExport.clicked.connect(self._btn_export_clicked)
+        self.ui.rbText.setChecked(True)
 
         self._init_listFeeds_items()
 
@@ -59,7 +60,7 @@ class MainForm(QDialog):
         if self.ui.listFeeds.currentItem() != None:
             try:
                 feed = rss_feed(urllib.request.urlopen(self.ui.listFeeds.currentItem().toolTip()))
-                feed_form = FeedForm(feed)
+                feed_form = FeedForm(feed, self.ui.rbHtml.isChecked())
                 feed_form.exec()
             except ValueError:
                 self._throw_link_error()
