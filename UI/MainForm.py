@@ -1,9 +1,10 @@
 import sys, os.path
 import urllib.request
 from PyQt4.QtGui import *
-from UI.MainFormUI import Ui_MainForm
-from UI.FeedForm import FeedForm
-from Lib.RssFeed import RssFeed as rss_feed
+from ui.MainFormUI import Ui_MainForm
+from ui.FeedForm import FeedForm
+from lib.RssFeed import RssFeed as rss_feed
+from lib.OpmlParser import OpmlParser
 
 class MainForm(QDialog):
     def __init__(self):
@@ -69,32 +70,79 @@ class MainForm(QDialog):
 
     def _btn_import_clicked(self):
         file_dialog = QFileDialog()
-        file_dialog.setNameFilter("Text files (*.txt)")
+        file_dialog.setNameFilter("Text files (*.txt), OPML Files (*.opml)")
         
         if file_dialog.exec():
-            with open(file_dialog.selectedFiles()[0], 'r') as import_file:
-                with open(self.file_path, 'a+') as links_file:
-                    for line in import_file.read().splitlines():
-                        links_file.write(line + '\n')
+            selected_file = file_dialog.selectedFiles()[0]
+            if os.path.exists(selected_file):
+                if '.txt' in selected_file:
+                    self._import_txt(selected_file)
+                if '.opml' in selected_file:
+                    self._import_opml(selected_file)
+            else:
+                self._throw_file_error()
 
         self._init_listFeeds_items()
 
+    def _import_txt(self, selected_file):
+        with open(selected_file, 'r') as import_file:
+            with open(self.file_path, 'a+') as links_file:
+                for line in import_file.read().splitlines():
+                    links_file.write(line + '\n')
+
+    def _import_opml(self, selected_file):
+        opml_parser = OpmlParser()
+        opml_parser.parse(selected_file)
+        with open(self.file_path, 'a+') as links_file:
+            for feed in opml_parser.feeds:
+                links_file.write(feed + '\n')
+        
     def _btn_export_clicked(self):
         file_dialog = QFileDialog()
-        file_dialog.setNameFilter("Text files (*.txt)")
+        file_dialog.setNameFilters(["Text files (*.txt)", "OPML files (*.opml)"])
 
         if file_dialog.exec():
             selected_file = file_dialog.selectedFiles()[0]
+            selected_name_filter = file_dialog.selectedNameFilter()
             
             if os.path.exists(selected_file):
                 if self._confirmation_dialog() == QMessageBox.Ok:
-                    with open(selected_file, 'w') as new_file:
-                        with open(self.file_path, 'r') as links_file:
-                            new_file.write(links_file.read())
+                    if '.txt' in selected_file:
+                        self._export_txt(selected_file)
+                    if '.opml' in selected_file:
+                        self._export_opml(selected_file)                   
             else:
-                with open(selected_file + '.txt', 'w') as new_file:
-                        with open(self.file_path, 'r') as links_file:
-                            new_file.write(links_file.read())
+                if '.txt' in selected_name_filter:
+                    self._export_new_txt(selected_file)
+                if '.opml' in selected_name_filter:
+                    self._export_new_opml(selected_file)
+                
+
+    def _export_txt(self, selected_file):
+        with open(selected_file, 'w') as new_file:
+            with open(self.file_path, 'r') as links_file:
+                new_file.write(links_file.read())
+
+    def _export_new_txt(self, selected_file):
+        with open(selected_file + '.txt', 'w') as new_file:
+            with open(self.file_path, 'r') as links_file:
+                new_file.write(links_file.read())
+
+    def _export_opml(self, selected_file):
+        opml_parser = OpmlParser()       
+        with open(selected_file, 'w') as new_file:
+            with open(self.file_path, 'r') as links_file:
+                links = links_file.read()
+                opml = opml_parser.build_opml(links)
+                new_file.write(opml)
+
+    def _export_new_opml(self, selected_file):
+        opml_parser = OpmlParser()       
+        with open(selected_file + '.opml', 'w') as new_file:
+            with open(self.file_path, 'r') as links_file:
+                links = links_file.read()
+                opml = opml_parser.build_opml(links)
+                new_file.write(opml)
 
     def _init_listFeeds_items(self):
         self.ui.listFeeds.clear()
@@ -133,6 +181,13 @@ class MainForm(QDialog):
         error.setWindowTitle("Error!")
         error.setIcon(QMessageBox.Critical)
         error.setText("Feed link error!")
+        error.exec()
+
+    def _throw_file_error(self):
+        error = QMessageBox()
+        error.setWindowTitle("Error!")
+        error.setIcon(QMessageBox.Critical)
+        error.setText("File doesn`t exist!")
         error.exec()
 
     def _confirmation_dialog(self):

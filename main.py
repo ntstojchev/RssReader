@@ -1,7 +1,7 @@
 import sys
 from PyQt4 import QtGui, QtCore
-from UI.MainForm import *
-from Lib.RssFeed import RssFeed as rss_feed
+from ui.MainForm import *
+from lib.RssFeed import RssFeed as rss_feed
 
 def main():
     app = QtGui.QApplication(sys.argv)

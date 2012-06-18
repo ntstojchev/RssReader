@@ -1,7 +1,7 @@
 import sys, os.path
 from PyQt4.QtGui import *
-from UI.FeedFormUI import Ui_FeedForm
-from Lib.RssFeed import RssFeed as rss_feed
+from ui.FeedFormUI import Ui_FeedForm
+from lib.RssFeed import RssFeed as rss_feed
 
 class FeedForm(QDialog):
     def __init__(self, feed, html_checked):

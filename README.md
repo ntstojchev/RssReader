@@ -1,5 +1,5 @@
 ##RssReader
-RssReader is an application, developed in Python with the help of PyQt, aiming to provide the user with an easy and comfortable way of reading rss feeds.
+RssReader is an application, developed in Python with the help of PyQt, aiming to provide the user with an easy way of reading rss feeds.
 
 ##Functionality:
 The application will be able to:
