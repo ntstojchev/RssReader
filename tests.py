@@ -2,6 +2,7 @@ import unittest
 import xml.etree.ElementTree as etree
 from lib.RssFeed import RssFeed
 from lib.FeedItem import FeedItem
+from lib.OpmlParser import OpmlParser
 
 class RssFeedTest(unittest.TestCase):
     def setUp(self):
@@ -42,6 +43,9 @@ class RssFeedTest(unittest.TestCase):
         self.assertEqual(feed_item.enclosure, test_feed_item.find('enclosure').attrib['url'])
         self.assertEqual(feed_item.link, test_feed_item.find('link').text)
 
-		
+    def test_invalid_opml_feed(self):
+        parser = OpmlParser()
+        self.assertRaises(KeyError, parser.parse, 'invalid_opml.opml')
+        		
 if __name__ == "__main__":
     unittest.main()

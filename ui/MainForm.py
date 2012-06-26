@@ -1,4 +1,4 @@
-import sys, os.path
+import sys, os.path, re
 import urllib.request
 from PyQt4.QtGui import *
 from ui.MainFormUI import Ui_MainForm
@@ -70,7 +70,7 @@ class MainForm(QDialog):
 
     def _btn_import_clicked(self):
         file_dialog = QFileDialog()
-        file_dialog.setNameFilter("Text files (*.txt), OPML Files (*.opml)")
+        file_dialog.setNameFilters(["Text files (*.txt)", "OPML Files (*.opml)"])
         
         if file_dialog.exec():
             selected_file = file_dialog.selectedFiles()[0]
@@ -88,15 +88,24 @@ class MainForm(QDialog):
         with open(selected_file, 'r') as import_file:
             with open(self.file_path, 'a+') as links_file:
                 for line in import_file.read().splitlines():
-                    links_file.write(line + '\n')
+                    if re.search(r'(.*), (.*)', line):
+                        links_file.write(line + '\n')
+                    else:
+                        self._throw_import_error()
 
     def _import_opml(self, selected_file):
         opml_parser = OpmlParser()
-        opml_parser.parse(selected_file)
-        with open(self.file_path, 'a+') as links_file:
-            for feed in opml_parser.feeds:
-                links_file.write(feed + '\n')
-        
+        try:
+            opml_parser.parse(selected_file)
+            with open(self.file_path, 'a+') as links_file:
+                for feed in opml_parser.feeds:
+                    if re.search(r'(.*), (.*)', feed):
+                        links_file.write(feed + '\n')
+                    else:
+                        self._throw_import_error()
+        except KeyError:
+            self._throw_import_error()
+               
     def _btn_export_clicked(self):
         file_dialog = QFileDialog()
         file_dialog.setNameFilters(["Text files (*.txt)", "OPML files (*.opml)"])
@@ -198,3 +207,10 @@ class MainForm(QDialog):
         confirmation.addButton(QMessageBox.Cancel)
         confirmation.addButton(QMessageBox.Ok)
         return confirmation.exec()
+
+    def _throw_import_error(self):
+        error = QMessageBox()
+        error.setWindowTitle("Error!")
+        error.setIcon(QMessageBox.Critical)
+        error.setText("Wrong import line format!")
+        error.exec()
