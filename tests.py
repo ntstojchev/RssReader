@@ -46,6 +46,18 @@ class RssFeedTest(unittest.TestCase):
     def test_invalid_opml_feed(self):
         parser = OpmlParser()
         self.assertRaises(KeyError, parser.parse, 'invalid_opml.opml')
+
+    def test_opml_items(self):
+        parser = OpmlParser()
+        parser.parse('export_feeds_opml.opml')
+        self.assertEqual(len(parser.feeds), 2)
+
+    def test_opml_item(self):
+        parser = OpmlParser()
+        parser.parse('export_feeds_opml.opml')
+        splited_item = parser.feeds[0].split(', ')
+        self.assertEqual('PC Mania', splited_item[0])
+        self.assertEqual('http://pcmania.bg/feed.php', splited_item[1])
         		
 if __name__ == "__main__":
     unittest.main()
