@@ -49,8 +49,9 @@ class OpmlParser:
     def _generate_outline(self, rss_feeds):
         outlines = ''
         for rss_feed in rss_feeds.splitlines():
-            feed = rss_feed.split(', ')
-            outlines += '           <outline title="' + str(feed[0]) + '" xmlUrl="' + str(feed[1]) + '"/>\n'
+            if rss_feed != '':
+                feed = rss_feed.split(', ')
+                outlines += '           <outline title="' + str(feed[0]) + '" xmlUrl="' + str(feed[1]) + '"/>\n'
 
         return outlines
 

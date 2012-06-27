@@ -49,7 +49,7 @@ class MainForm(QDialog):
             rss = name + ', ' + link
             new_feed = ''
             with open(self.file_path, 'r') as file:
-                new_feed = file.read().replace(rss + '\n', '')
+                new_feed = file.read().replace(rss + '\n', '', 1)
             with open(self.file_path, 'w+') as file:
                 file.write(new_feed)
             self._init_listFeeds_items()
